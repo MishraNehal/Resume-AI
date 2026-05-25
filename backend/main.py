@@ -44,7 +44,7 @@ def get_client():
     )
 
 MAX_FILE_SIZE = 5 * 1024 * 1024
-client = get_client()
+
 
 # ── Pydantic Models ────────────────────────────────────────────────────────────
 
@@ -241,7 +241,7 @@ async def ats_score(request: ATSScoreRequest):
             f"Resume:\n{request.resume_text[:4000]}\n\n"
             f"Job Description:\n{request.job_description[:3000]}"
         )
-        
+        client = get_client()
         response = client.chat.completions.create(
             model="gemini-2.5-flash",
             max_tokens=8000,
@@ -289,7 +289,7 @@ async def chat(request: ChatRequest):
             f"User question: {request.message}"
         )
         messages.append({"role": "user", "content": user_message})
-
+        client = get_client()
         response = client.chat.completions.create(
             model="gemini-2.5-flash",
             max_tokens=1000,
@@ -312,6 +312,7 @@ async def cover_letter(request: CoverLetterRequest):
             f"Resume data:\n{json.dumps(request.resume_data, indent=2)[:3000]}\n\n"
             f"Job description:\n{request.job_description[:2000]}"
         )
+        client = get_client()
         response = client.chat.completions.create(
             model="gemini-2.5-flash",
             max_tokens=2500,
@@ -351,6 +352,7 @@ async def resume_score(request: ResumeScoreRequest):
             "IMPORTANT: Keep all feedback under 10 words each. Keep lists under 5 items. Be concise."
             f"Resume data:\n{json.dumps(request.resume_data, indent=2)[:4000]}"
         )
+        client = get_client()
         response = client.chat.completions.create(
             model="gemini-2.5-flash",
             max_tokens=8000,
@@ -387,6 +389,7 @@ async def skill_gap(request: SkillGapRequest):
             "IMPORTANT: has_skills max 8 items. missing_skills max 6 items. roadmap max 4 items. Be concise."
             f"Resume data:\n{json.dumps(request.resume_data, indent=2)[:4000]}"
         )
+        client = get_client()
         response = client.chat.completions.create(
             model="gemini-2.5-flash",
             max_tokens=8000,
@@ -435,7 +438,8 @@ async def compare_resumes(request: CompareResumesRequest):
             f"Job Description: {request.job_description or 'Not provided'}\n\n"
             "IMPORTANT: Keep verdict under 20 words. Keep all notes under 8 words each. "
             "Keep all lists under 5 items. Be very concise to avoid truncation."
-        )   
+        )  
+        client = get_client() 
         response = client.chat.completions.create(
             model="gemini-2.5-flash",
             max_tokens=16000,

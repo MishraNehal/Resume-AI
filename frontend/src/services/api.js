@@ -4,11 +4,12 @@ import axios from 'axios'
 // Create frontend/.env with: VITE_API_BASE=https://your-ngrok-url.ngrok-free.dev
 const API_BASE =
   import.meta.env.VITE_API_BASE ||
-  'https://workmanlike-calculably-garrison.ngrok-free.dev'
+  'http://localhost:8000'
 
-const headers = {
-  'ngrok-skip-browser-warning': 'true',
-}
+const headers = import.meta.env.DEV
+  ? { 'ngrok-skip-browser-warning': 'true' }  // only in development
+  : {}  // empty in production
+
 
 // ✅ FIX: Centralized error extractor so every function gives clean error messages
 function extractError(err) {

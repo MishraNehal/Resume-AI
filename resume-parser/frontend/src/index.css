@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* ── Dark mode — covers every component ──────────────────────────────────── */
+
+/* Modals */
+.dark .modal-bg,
+.dark [class*="bg-white"] {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* All gray backgrounds */
+.dark [class*="bg-gray-50"]  { background-color: #0f172a !important; }
+.dark [class*="bg-gray-100"] { background-color: #1e293b !important; }
+.dark [class*="bg-gray-200"] { background-color: #334155 !important; }
+
+/* All text */
+.dark [class*="text-gray-900"] { color: #f1f5f9 !important; }
+.dark [class*="text-gray-800"] { color: #e2e8f0 !important; }
+.dark [class*="text-gray-700"] { color: #cbd5e1 !important; }
+.dark [class*="text-gray-600"] { color: #94a3b8 !important; }
+.dark [class*="text-gray-500"] { color: #64748b !important; }
+.dark [class*="text-gray-400"] { color: #475569 !important; }
+.dark [class*="text-black"]    { color: #f1f5f9 !important; }
+
+/* All borders */
+.dark [class*="border-gray-100"] { border-color: #0f172a !important; }
+.dark [class*="border-gray-200"] { border-color: #1e293b !important; }
+.dark [class*="border-gray-300"] { border-color: #334155 !important; }
+
+/* Inputs and textareas */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #334155 !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #475569 !important;
+}
+
+/* Hover states that flip to black */
+.dark [class*="hover:bg-black"]:hover  {
+  background-color: #facc15 !important;
+  color: #111827 !important;
+}
+
+/* Buttons with black background */
+.dark [class*="bg-black"]  {
+  background-color: #facc15 !important;
+  color: #111827 !important;
+}
+
+/* Tags and pills with black border */
+.dark [class*="border-gray-900"],
+.dark [class*="border-black"] {
+  border-color: #334155 !important;
+}
+
+/* Skill tags */
+.dark .skill-tag,
+.dark [class*="border border-gray"] {
+  background-color: #1e293b !important;
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
+}
+
+/* Timeline lines */
+.dark [class*="bg-yellow"] {
+  /* keep yellow as is */
+}
+
+/* Cards with shadow */
+.dark [class*="shadow-sm"] {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.6) !important;
+}
+
+.dark [class*="shadow-lg"] {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.7) !important;
+}
+
+/* Sticky action bars */
+.dark [class*="sticky"] {
+  background-color: #020617 !important;
+}
+
+/* Modals backdrop */
+.dark [class*="bg-black/"] {
+  background-color: rgba(0,0,0,0.8) !important;
+}
+
+/* Error banners */
+.dark .bg-red-50    { background-color: #450a0a !important; }
+.dark .text-red-800 { color: #fca5a5 !important; }
+.dark .text-red-700 { color: #f87171 !important; }
+.dark .border-red-200 { border-color: #7f1d1d !important; }
+
+/* Green success */
+.dark .bg-green-50   { background-color: #052e16 !important; }
+.dark .text-green-800 { color: #86efac !important; }
+.dark .text-green-700 { color: #4ade80 !important; }
+.dark .text-green-600 { color: #22c55e !important; }
+.dark .text-green-500 { color: #22c55e !important; }
+
+/* Blue info */
+.dark .bg-blue-50   { background-color: #172554 !important; }
+.dark .text-blue-600 { color: #60a5fa !important; }
+.dark .text-blue-500 { color: #60a5fa !important; }
+
+/* Amber/Yellow — keep visible */
+.dark .text-amber-500 { color: #fbbf24 !important; }
+.dark .bg-amber-100   { background-color: #451a03 !important; }
+
+/* Dividers */
+.dark hr { border-color: #1e293b !important; }
+
+/* Scrollbar in dark mode */
+.dark ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* ── Animations ───────────────────────────────────────────────────────────── */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-progress {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+@keyframes winnerGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(250,204,21,0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(250,204,21,0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-fadeIn         { animation: fadeIn 0.4s ease-out both; }
+.animate-fadeInLeft     { animation: fadeInLeft 0.4s ease-out both; }
+.animate-fadeInRight    { animation: fadeInRight 0.4s ease-out both; }
+.animate-pulse-progress { animation: pulse-progress 1.5s ease-in-out infinite; }
+.animate-winner-glow    { animation: winnerGlow 2s ease-in-out infinite; }
+.animate-slideInRight   { animation: slideInRight 0.3s ease-out both; }
+.animate-slideInLeft    { animation: slideInLeft 0.3s ease-out both; }
+.animate-spin-slow      { animation: spin-slow 3s linear infinite; }
+
+/* Stagger children */
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 80ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 160ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 320ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 400ms; }

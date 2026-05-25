@@ -1,0 +1,30 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Node
+node_modules/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Project utility/test files — not needed on GitHub
+dump_project.py
+Treestructure.py
+project_structure.txt
+Resume_AI_full_code_dump.txt
+test_ats.ps1
+test_body.json

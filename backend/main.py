@@ -23,7 +23,12 @@ async def startup_event():
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "https://resume-ai-frontend.vercel.app",  # add your vercel URL after deploy
+        "*"  # temporary — remove after getting vercel URL
+    ],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],

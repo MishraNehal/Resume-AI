@@ -26,7 +26,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:3000",
-        "https://resume-ai-frontend.vercel.app",  # add your vercel URL after deploy
+        "https://resume-ai-pi-three.vercel.app/",  # add your vercel URL after deploy
         "*"  # temporary — remove after getting vercel URL
     ],
     allow_credentials=False,

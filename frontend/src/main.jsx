@@ -2,7 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
+import { startKeepAlive } from './services/keepAlive'
 
+startKeepAlive() // ← add this line before ReactDOM.createRoot
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />

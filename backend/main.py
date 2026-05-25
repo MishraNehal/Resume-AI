@@ -12,6 +12,14 @@ import os
 load_dotenv()
 
 app = FastAPI(title="Resume Parser API", version="1.0.0")
+@app.on_event("startup")
+async def startup_event():
+    api_key = os.environ.get("NEXUS_API_KEY")
+    if not api_key:
+        print("WARNING: NEXUS_API_KEY not set!")
+    else:
+        print("✅ NEXUS_API_KEY loaded successfully")
+    print("✅ Resume AI API started successfully")
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,10 +29,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-client = OpenAI(
-    api_key=os.environ.get("NEXUS_API_KEY"),
-    base_url="https://apidev.navigatelabsai.com",
-)
+def get_client():
+    api_key = os.environ.get("NEXUS_API_KEY")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="API key not configured")
+    return OpenAI(
+        api_key=api_key,
+        base_url="https://apidev.navigatelabsai.com",
+    )
 
 MAX_FILE_SIZE = 5 * 1024 * 1024
 

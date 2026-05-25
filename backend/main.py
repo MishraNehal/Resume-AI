@@ -75,10 +75,9 @@ def extract_text_from_txt(file_bytes: bytes) -> str:
 # ── JSON Parser ────────────────────────────────────────────────────────────────
 
 def parse_json_response(raw: str) -> dict:
-    """Robustly parse JSON — handles truncation, markdown fences, extra text."""
     text = raw.strip()
-
-    # Strip markdown fences
+    
+    # Remove markdown fences
     if "```" in text:
         parts = text.split("```")
         for part in parts:
@@ -100,7 +99,7 @@ def parse_json_response(raw: str) -> dict:
     except Exception:
         pass
 
-    # Last resort — find outermost { } and parse
+    # ✅ KEY FIX: Find outermost { } and try to parse
     start = text.find("{")
     end = text.rfind("}")
     if start != -1 and end != -1 and end > start:
@@ -111,6 +110,34 @@ def parse_json_response(raw: str) -> dict:
         except Exception:
             pass
 
+    # ✅ LAST RESORT: JSON is truncated — fix by closing all open brackets
+    if start != -1:
+        fragment = text[start:]
+        # Count open structures and close them
+        open_braces = fragment.count("{") - fragment.count("}")
+        open_brackets = fragment.count("[") - fragment.count("]")
+        
+        # Remove trailing incomplete string (after last complete value)
+        # Find last clean comma or closing bracket
+        closing = ""
+        if open_brackets > 0:
+            closing += "]" * open_brackets
+        if open_braces > 0:
+            closing += "}" * open_braces
+            
+        # Try to find last good position (after last " or ] or })
+        for i in range(len(fragment) - 1, max(len(fragment) - 100, 0), -1):
+            char = fragment[i]
+            if char in ('"', ']', '}', '0123456789'):
+                candidate = fragment[:i+1] + closing
+                try:
+                    result = json.loads(candidate)
+                    if isinstance(result, dict):
+                        print("RECOVERED truncated JSON successfully")
+                        return result
+                except Exception:
+                    continue
+    
     raise json.JSONDecodeError("No valid JSON object found", text, 0)
 
 
@@ -162,7 +189,7 @@ async def parse_resume(file: UploadFile = File(...)):
         )
         response = client.chat.completions.create(
             model="gemini-2.5-flash",
-            max_tokens=4000,
+            max_tokens=16000,
             messages=[{"role": "user", "content": prompt}],
         )
         raw = response.choices[0].message.content.strip()
@@ -217,31 +244,42 @@ async def ats_score(request: ATSScoreRequest):
 async def chat(request: ChatRequest):
     try:
         messages = []
+        
+        # Build history (last 10 messages)
         for msg in request.chat_history[-10:]:
             role = msg.get("role", "user")
             content = msg.get("content", "")
             if role in ("user", "assistant") and content:
                 messages.append({"role": role, "content": content})
 
+        # ✅ Strict resume-only system context
         user_message = (
-            "You are a career advisor AI. You have access to this resume:\n\n"
-            f"{json.dumps(request.resume_data, indent=2)[:3000]}\n\n"
-            "Answer the following question based on this resume. "
-            "Be specific, concise (max 150 words), encouraging but honest.\n\n"
-            f"Question: {request.message}"
+            "You are a resume analysis assistant. Your ONLY job is to answer "
+            "questions about the resume provided below.\n\n"
+            "STRICT RULES:\n"
+            "1. ONLY answer questions related to THIS resume and career advice for THIS person\n"
+            "2. If asked anything NOT related to the resume (general knowledge, coding help, "
+            "current events, math, jokes, or any other topic), respond with exactly: "
+            "'I can only answer questions about your resume. Try asking about your skills, "
+            "experience, career advice, or job fit.'\n"
+            "3. Do NOT answer general programming questions even if skills are on the resume\n"
+            "4. Do NOT make up information not present in the resume\n"
+            "5. Keep answers under 120 words\n"
+            "6. Be encouraging but honest\n\n"
+            f"Resume data:\n{json.dumps(request.resume_data, indent=2)[:3000]}\n\n"
+            f"User question: {request.message}"
         )
         messages.append({"role": "user", "content": user_message})
 
         response = client.chat.completions.create(
             model="gemini-2.5-flash",
-            max_tokens=500,
+            max_tokens=1000,
             messages=messages,
         )
         reply = response.choices[0].message.content.strip()
         return {"success": True, "reply": reply}
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"AI API error: {str(e)}")
-
 
 @app.post("/cover-letter")
 async def cover_letter(request: CoverLetterRequest):
@@ -375,11 +413,13 @@ async def compare_resumes(request: CompareResumesRequest):
             "winner must be: resume_1, resume_2, or tie\n\n"
             f"Resume 1:\n{json.dumps(request.resume_1, indent=2)[:3000]}\n\n"
             f"Resume 2:\n{json.dumps(request.resume_2, indent=2)[:3000]}\n\n"
-            f"Job Description: {request.job_description or 'Not provided'}"
-        )
+            f"Job Description: {request.job_description or 'Not provided'}\n\n"
+            "IMPORTANT: Keep verdict under 20 words. Keep all notes under 8 words each. "
+            "Keep all lists under 5 items. Be very concise to avoid truncation."
+        )   
         response = client.chat.completions.create(
             model="gemini-2.5-flash",
-            max_tokens=4000,
+            max_tokens=16000,
             messages=[{"role": "user", "content": prompt}],
         )
         raw = response.choices[0].message.content.strip()

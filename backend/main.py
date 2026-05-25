@@ -44,7 +44,7 @@ def get_client():
     )
 
 MAX_FILE_SIZE = 5 * 1024 * 1024
-
+client = get_client()
 
 # ── Pydantic Models ────────────────────────────────────────────────────────────
 
@@ -204,6 +204,7 @@ async def parse_resume(file: UploadFile = File(...)):
             '"certifications":[],"languages":[]}\n\n'
             f"Resume text:\n{text[:8000]}"
         )
+        client = get_client()
         response = client.chat.completions.create(
             model="gemini-2.5-flash",
             max_tokens=16000,
@@ -240,6 +241,7 @@ async def ats_score(request: ATSScoreRequest):
             f"Resume:\n{request.resume_text[:4000]}\n\n"
             f"Job Description:\n{request.job_description[:3000]}"
         )
+        
         response = client.chat.completions.create(
             model="gemini-2.5-flash",
             max_tokens=8000,

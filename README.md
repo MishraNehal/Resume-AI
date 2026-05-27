@@ -2,7 +2,7 @@
 
 > AI-powered resume analyzer for optimizing job applications. Built to help students and professionals improve their resumes using intelligent AI analysis.
 
-**[Live Demo](https://resume-ai-pi-three.vercel.app/)** | **[API Docs](https://resume-ai-backend-sn3m.onrender.com/docs)**
+**[Live Demo](https://resume-ai-pi-three.vercel.app/)** | **[API Docs](https://resume-ai-backend-sn3m.onrender.com/docs)** | **[Video Demo](https://youtu.be/_x-MEgZDmW8)**
 
 ---
 
